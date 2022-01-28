@@ -5,9 +5,8 @@ const dishes = require(path.resolve("src/data/dishes-data"));
 
 // Use this function to assign ID's when necessary
 const nextId = require("../utils/nextId");
-// TODO: Implement the /dishes handlers needed to make the tests pass
 
-// validation
+// checks if name is truthy
 const hasName = (req, res, next) => {
     const { data: { name } = {}} = req.body
     if (name) return next()
@@ -17,6 +16,7 @@ const hasName = (req, res, next) => {
     })
 }
 
+// checks if description is truthy
 const hasDescription = (req, res, next) => {
     const { data: { description } = {}} = req.body
     if (description) return next()
@@ -26,6 +26,7 @@ const hasDescription = (req, res, next) => {
     })
 }
 
+// checks if price is greater than 0 || includes a price
 const hasPrice = (req, res, next) => {
     const { data: { price } = {}} = req.body
     if (!price) return next({
@@ -39,6 +40,7 @@ const hasPrice = (req, res, next) => {
     next()
 }
 
+// checks if image_url is truthy
 const hasImageUrl = (req, res, next) => {
     const { data: { image_url } = {}} = req.body
     if (image_url) return next()
@@ -48,6 +50,7 @@ const hasImageUrl = (req, res, next) => {
     })
 }
 
+// Finds the order
 const isValid = (req, res, next) => {
     const dishId = req.params.dishId
     const foundDish = dishes.find(dish => dish.id === dishId)
@@ -62,11 +65,10 @@ const isValid = (req, res, next) => {
     })
 }
 
+// Checks if the id's match || if id is falsey
 const hasValidId = (req, res, next) => {
     const { data: { id }} = req.body
     const { dishId } = req.params
-    console.log(`id: ${id}`)
-    console.log(`dishId: ${dishId}`)
 
     if (id === dishId) return next()
     if (!id) return next()

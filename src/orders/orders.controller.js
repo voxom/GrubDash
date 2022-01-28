@@ -3,10 +3,10 @@ const path = require("path");
 // Use the existing order data
 const orders = require(path.resolve("src/data/orders-data"));
 
-// Use this function to assigh ID's when necessary
+// Use this function to assign ID's when necessary
 const nextId = require("../utils/nextId");
 
-// TODO: Implement the /orders handlers needed to make the tests pass
+// Finds the order
 const isValidOrder = (req, res, next) => {
     const { orderId } = req.params
     const foundOrder = orders.find(order => order.id === orderId)
@@ -20,6 +20,7 @@ const isValidOrder = (req, res, next) => {
     })
 }
 
+// Checks if deliverTo is truthy
 const hasDeliverTo = (req, res, next) => {
     const { data: { deliverTo }} = req.body
     if (deliverTo) return next()
@@ -29,6 +30,7 @@ const hasDeliverTo = (req, res, next) => {
     })
 }
 
+// Checks if MobileNumber is truthy
 const hasMobileNumber = (req, res, next) => {
     const { data: { mobileNumber }} = req.body
     if (mobileNumber) return next()
@@ -38,23 +40,22 @@ const hasMobileNumber = (req, res, next) => {
     })
 }
 
+// Checks if the dishes is falsey
 const hasDishes = (req, res, next) => {
     const { data: { dishes }} = req.body
     if (!dishes) return next({
         status: 400,
         message: 'Order must include a dish'
     })
-    if (!Array.isArray(dishes)) return next({
+    else if (!Array.isArray(dishes) || dishes.length === 0)
+      return next({
         status: 400,
-        message: 'Order must include at least one dish'
-    })
-    if (dishes.length === 0) return next({
-        status: 400,
-        message: 'Order must include at least one dish'
-    })
+        message: "Order must include at least one dish",
+      });
     next()
 }
 
+// Checks if the dishes quantity is greater than 0
 const hasDishQuantity = (req, res, next) => {
     const { data: { dishes }} = req.body
     dishes.forEach((dish, index) => {
@@ -66,6 +67,7 @@ const hasDishQuantity = (req, res, next) => {
     next()
 }
 
+// Checks to see if the id's match || or if id is falsey
 const hasValidId = (req, res, next ) => {
     const { data: { id }} = req.body
     const { orderId } = req.params
@@ -78,6 +80,7 @@ const hasValidId = (req, res, next ) => {
     })
 }
 
+// checks if status has a valid result
 const hasStatus = (req, res, next) => {
     const { data: { status }} = req.body
     const validResult = ['pending', 'preparing', 'out-for-delivery', 'delivered']
