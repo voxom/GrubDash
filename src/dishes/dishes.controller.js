@@ -7,7 +7,7 @@ const dishes = require(path.resolve("src/data/dishes-data"));
 const nextId = require("../utils/nextId");
 
 // checks if name is truthy
-const hasName = (req, res, next) => {
+function hasName (req, res, next) {
     const { data: { name } = {}} = req.body
     if (name) return next()
     next({
@@ -17,7 +17,7 @@ const hasName = (req, res, next) => {
 }
 
 // checks if description is truthy
-const hasDescription = (req, res, next) => {
+function hasDescription (req, res, next) {
     const { data: { description } = {}} = req.body
     if (description) return next()
     next({
@@ -27,7 +27,7 @@ const hasDescription = (req, res, next) => {
 }
 
 // checks if price is greater than 0 || includes a price
-const hasPrice = (req, res, next) => {
+function hasPrice (req, res, next) {
     const { data: { price } = {}} = req.body
     if (!price) return next({
         status: 400,
@@ -41,7 +41,7 @@ const hasPrice = (req, res, next) => {
 }
 
 // checks if image_url is truthy
-const hasImageUrl = (req, res, next) => {
+function hasImageUrl (req, res, next) {
     const { data: { image_url } = {}} = req.body
     if (image_url) return next()
     next({
@@ -51,7 +51,7 @@ const hasImageUrl = (req, res, next) => {
 }
 
 // Finds the order
-const isValid = (req, res, next) => {
+function isValid (req, res, next) {
     const dishId = req.params.dishId
     const foundDish = dishes.find(dish => dish.id === dishId)
 
@@ -66,7 +66,7 @@ const isValid = (req, res, next) => {
 }
 
 // Checks if the id's match || if id is falsey
-const hasValidId = (req, res, next) => {
+function hasValidId (req, res, next) {
     const { data: { id }} = req.body
     const { dishId } = req.params
 
@@ -79,12 +79,12 @@ const hasValidId = (req, res, next) => {
 }
 
 // route GET /dishes
-const list = (req, res, next) => {
+function list (req, res, next) {
     res.json({ data: dishes })
 }
 
 // route POST /dishes
-const create = (req, res, next) => {
+function create (req, res, next) {
     const { 
         data: { name, description, price, image_url } = {}
     } = req.body
@@ -100,14 +100,14 @@ const create = (req, res, next) => {
 }
 
 // GET /dishes/:dishId
-const read = (req, res, next) => {
+function read (req, res, next) {
     res.json({
         data: res.locals.dish
     })
 }
 
 // PUT /dishes/:dishId
-const update = (req, res, next) => {
+function update (req, res, next) {
     const {
         data: { id, name, description, price, image_url }
     } = req.body
